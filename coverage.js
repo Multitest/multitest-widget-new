@@ -1,4 +1,3 @@
-
 if (typeof WIDGET == "undefined" || !WIDGET) {
     var WIDGET = {};
 }
@@ -115,11 +114,6 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
     dialog.style.display = 'none';
     document.body.appendChild(dialog);
 
-    var places = document.createElement("script");
-    places.type = "text/javascript";
-    places.src = "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places";
-    document.body.appendChild(places);
-
     String.prototype.format = function() {
         var formatted = this;
         for (var i = 0; i < arguments.length; i++) {
@@ -128,13 +122,6 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         }
         return formatted;
     };
-
-
-    function initialize() {
-        var input = document.getElementById('address');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-    }
-
 
     var render = function(o) {
         var html = '';
@@ -148,14 +135,10 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
             html += '<button id="{0}">{1}</button>'.format(button.id, button.text);
         }
 
-        google.maps.event.addDomListener(window, 'load', initialize);
-
         WIDGET.DOM.setInnerHTML(dialog, html);
         dialog.style.display = 'block';
         activateListeners(o.buttons);
-
     };
-
 
     var activateListeners = function(buttons) {
         var i, length, button, isUndefined = WIDGET.Lang.isUndefined;
