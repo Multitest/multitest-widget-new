@@ -123,21 +123,51 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         return formatted;
     };
 
+    var loadJSON = function(path, success, error) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    if (success)
+                        success(JSON.parse(xhr.responseText));
+                } else {
+                    if (error)
+                        error(xhr);
+                }
+            }
+        };
+        xhr.open("GET", path, true);
+        xhr.send();
+        return true;
+    }
+
     var render = function(o) {
         var html = '';
-        html = '<p>{0}</p>'.format(o.body ? o.body : '');
-        for (i = 0; i < o.inputs.length; i++) {
-            input = o.inputs[i];
-            html += '<input type="text" value="" placeholder="{0}" id="{1}" name="{2}">'.format(input.placeholder, input.id, input.name);
-        }
-        for (i = 0; i < o.buttons.length; i++) {
-            button = o.buttons[i];
-            html += '<button id="{0}">{1}</button>'.format(button.id, button.text);
-        }
+        var city = '';
+        loadJSON('http://ip-api.com/json',
+            function(data) {
+                city = data.city;
+                html = '<p>{0}</p>'.format(o.body ? o.body : '');
+                for (i = 0; i < o.inputs.length; i++) {
+                    input = o.inputs[i];
+                    if (input.name == 'city') {
+                        html += '<input type="text" placeholder="{0}" id="{1}" name="{2}" value="{3}" >'.format(input.placeholder, input.id, input.name, city);
+                    } else {
+                        html += '<input type="text" value="" placeholder="{0}" id="{1}" name="{2}">'.format(input.placeholder, input.id, input.name);
+                    }
+                }
+                for (i = 0; i < o.buttons.length; i++) {
+                    button = o.buttons[i];
+                    html += '<button id="{0}">{1}</button>'.format(button.id, button.text);
+                }
 
-        WIDGET.DOM.setInnerHTML(dialog, html);
-        dialog.style.display = 'block';
-        activateListeners(o.buttons);
+                WIDGET.DOM.setInnerHTML(dialog, html);
+                dialog.style.display = 'block';
+                activateListeners(o.buttons);
+            },
+            function(xhr) {}
+        );
+
     };
 
     var activateListeners = function(buttons) {
