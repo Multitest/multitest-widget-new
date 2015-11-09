@@ -143,13 +143,18 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         var html = '';
         var city = '';
 
-        loadJSON('http://ip-api.com/json',
+        loadJSON('http://www.telize.com/geoip',
             function(data) {
-                lat = data.lat;
-                lng = data.lon;
+                lat = data.longitude;
+                lng = data.latitude;
+                if (data.hasOwnProperty("city")) {
+                    var address = data.city;
+                } else {
+                    var address = data.country;                    
+                }
                 WIDGET.DOM.addText(dialog, 'p', o.body);
                 for (i = 0; i < o.inputs.length; i++) {
-                    WIDGET.DOM.addInput(dialog, o.inputs[i], data.city);
+                    WIDGET.DOM.addInput(dialog, o.inputs[i], address);
                 }
                 for (i = 0; i < o.buttons.length; i++) {
                     WIDGET.DOM.addButton(dialog, o.buttons[i]);
