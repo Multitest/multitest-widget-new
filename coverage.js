@@ -13,11 +13,11 @@ function loadAutocomplete() {
             id: 'address',
             name: 'address',
             autocomplete: true,
-            placeholder: 'Адрес',
+            placeholder: 'Введите улицу и номер дома',
         }],
         buttons: [{
             id: 'result',
-            text: 'Увидеть результаты',
+            text: 'Сравнить тарифы',
             callback: function() {
                 WIDGET.Dialog.result();
             }
@@ -143,18 +143,13 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         var html = '';
         var city = '';
 
-        loadJSON('http://www.telize.com/geoip',
+        loadJSON('http://ip-api.com/json',
             function(data) {
-                lat = data.longitude;
-                lng = data.latitude;
-                if (data.hasOwnProperty("city")) {
-                    var address = data.city;
-                } else {
-                    var address = data.country;                    
-                }
+                lat = data.lat;
+                lng = data.lon;
                 WIDGET.DOM.addText(dialog, 'p', o.body);
                 for (i = 0; i < o.inputs.length; i++) {
-                    WIDGET.DOM.addInput(dialog, o.inputs[i], address);
+                    WIDGET.DOM.addInput(dialog, o.inputs[i], data.city);
                 }
                 for (i = 0; i < o.buttons.length; i++) {
                     WIDGET.DOM.addButton(dialog, o.buttons[i]);
