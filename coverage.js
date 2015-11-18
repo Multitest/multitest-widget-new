@@ -1,3 +1,5 @@
+var lat, lng;
+
 function loadAutocomplete() {
     function runWidget() {
         var script = document.createElement('script');
@@ -14,12 +16,15 @@ function loadAutocomplete() {
             name: 'address',
             autocomplete: true,
             placeholder: 'Введите улицу и номер дома',
+            callback: function() {
+                WIDGET.Dialog.changeAddress('address', 'result');
+            }
         }],
         buttons: [{
             id: 'result',
             text: 'Сравнить тарифы',
             callback: function() {
-                WIDGET.Dialog.result();
+                WIDGET.Dialog.resultMultitest('address', 'result');
             }
         }],
     });
@@ -29,10 +34,12 @@ function initializeAutocomplete() {
     var autocomplete = new google.maps.places.Autocomplete((document.getElementById('address')), {
         types: ['geocode']
     });
-    autocomplete.addListener('place_changed', fillInAddress);
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        var place = autocomplete.getPlace();
+        lat = place.geometry.location.lat();
+        lng = place.geometry.location.lng();
+    });
 }
-
-function fillInAddress() {}
 
 window.onload = loadAutocomplete;
 
@@ -115,8 +122,6 @@ if (typeof WIDGET == "undefined" || !WIDGET) {
 WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Dialog : function() {
 
     var dialog = document.getElementById('widget-multitest-inner');
-    var lat;
-    var lng;
     dialog.className = 'dialog';
     dialog.style.display = 'none';
     document.body.appendChild(dialog);
@@ -139,6 +144,20 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         return true;
     }
 
+    var formatAddress = function(place) {
+        var address = '';
+        if (place.terms.length) {
+            for (var i = place.terms.length - 2; i >= 0; i--) {
+                var current = place.terms[i].value;
+                var prev = i > 0 ? place.terms[i - 1].value : '#';
+                if (current.indexOf(prev) == -1) {
+                    address += place.terms[i].value + (i != 0 ? ', ' : '');
+                }
+            }
+        }
+        return address;
+    }
+
     var render = function(o) {
         var html = '';
         var city = '';
@@ -151,34 +170,31 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                 for (i = 0; i < o.inputs.length; i++) {
                     WIDGET.DOM.addInput(dialog, o.inputs[i], data.city);
                 }
+                activateListeners(o.inputs, 'change');
+
                 for (i = 0; i < o.buttons.length; i++) {
                     WIDGET.DOM.addButton(dialog, o.buttons[i]);
                 }
                 dialog.style.display = 'block';
-                activateListeners(o.buttons);
+                activateListeners(o.buttons, 'click');
             },
             function(xhr) {}
         );
 
     };
 
-    var activateListeners = function(buttons) {
-        var i, length, button, isUndefined = WIDGET.Lang.isUndefined;
+    var activateListeners = function(tag, type) {
+        var i, length, tag, isUndefined = WIDGET.Lang.isUndefined;
 
-        if (WIDGET.Lang.isUndefined(buttons)) {
+        if (WIDGET.Lang.isUndefined(tag)) {
             return;
         }
-        length = buttons.length;
 
+        length = tag.length;
         for (i = 0; i < length; i++) {
-            button = buttons[i];
-            if (!isUndefined(button.callback.type) && !isUndefined(button.callback.fn)) {
-                WIDGET.DOM.addListener(button.id, button.callback.type, button.callback.fn);
-            } else {
-                WIDGET.DOM.addListener(button.id, 'click', button.callback);
-            }
+            tag = tag[i];
+            WIDGET.DOM.addListener(tag.id, type, tag.callback);
         }
-        cached_buttons = buttons;
     };
 
     return {
@@ -188,8 +204,31 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         hide: function() {
             dialog.style.display = 'none';
         },
-        result: function() {
-            alert(lat + ',' + lng);
+        resultMultitest: function(address, result) {
+            address = document.getElementById(address).value;
+            button = document.getElementById(result);
+            if (address && !button.disabled) {
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({
+                    address: address
+                }, function(results) {
+                    try {
+                        lat = results[0].geometry.location.lat();
+                        lng = results[0].geometry.location.lng();
+                        window.open('http://www.multitest.ua/coordinates/internet-v-kvartiru/?lat=' + lat + '&lng=' + lng + '&address_text=' + address, '_blank');
+                    } catch (e) {
+                        console.log(e.name);
+                        button.disabled = true;
+                    }
+                });
+            }
+        },
+        changeAddress: function(address, result) {
+            if (document.getElementById(address).value) {
+                document.getElementById(result).disabled = false;
+            } else {
+                document.getElementById(result).disabled = true;
+            }
         }
     };
 }();
