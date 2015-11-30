@@ -1,4 +1,6 @@
 var lat, lng;
+var country = 'ua';
+var options = {};
 
 function loadAutocomplete() {
     function runWidget() {
@@ -31,9 +33,7 @@ function loadAutocomplete() {
 }
 
 function initializeAutocomplete() {
-    var autocomplete = new google.maps.places.Autocomplete((document.getElementById('address')), {
-        types: ['geocode']
-    });
+    var autocomplete = new google.maps.places.Autocomplete((document.getElementById('address')), options);
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
         var place = autocomplete.getPlace();
         lat = place.geometry.location.lat();
@@ -66,7 +66,7 @@ WIDGET.DOM = typeof WIDGET.DOM != 'undefined' && WIDGET.DOM ? WIDGET.DOM : {
         input.type = "text";
         input.placeholder = inputData.placeholder;
         input.id = inputData.id;
-        input.size = 30;
+        input.size = 50;
         input.name = inputData.name;
         input.value = text;
         dialog.appendChild(input);
@@ -158,6 +158,26 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         return address;
     }
 
+    var isHouse = function(results) {
+        for (i = 0; i < results[0].address_components.length; i++) {
+            for (j = 0; j < results[0].address_components[i].types.length; j++) {
+                if (results[0].address_components[i].types[j] == "street_number") {
+                    return true;
+                }
+                if (results[0].address_components[i].types[j] == "street_address") {
+                    return true;
+                }
+                if (results[0].address_components[i].types[j] == "premise") {
+                    return true;
+                }
+                if (results[0].address_components[i].types[j] == "subpremise") {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
     var render = function(o) {
         var html = '';
         var city = '';
@@ -166,6 +186,13 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
             function(data) {
                 lat = data.lat;
                 lng = data.lon;
+                options = {
+                    types: ['address'],
+                    componentRestrictions: {
+                        country: data.countryCode
+                    },
+                };
+
                 WIDGET.DOM.addText(dialog, 'p', o.body);
                 for (i = 0; i < o.inputs.length; i++) {
                     WIDGET.DOM.addInput(dialog, o.inputs[i], data.city);
@@ -207,17 +234,19 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         resultMultitest: function(address, result) {
             address = document.getElementById(address).value;
             button = document.getElementById(result);
+            button.disabled = false;
+
             if (address && !button.disabled) {
                 var geocoder = new google.maps.Geocoder();
                 geocoder.geocode({
                     address: address
                 }, function(results) {
-                    try {
+                    if (isHouse(results)) {
+                        button.disabled = false;
                         lat = results[0].geometry.location.lat();
                         lng = results[0].geometry.location.lng();
                         window.open('http://www.multitest.ua/coordinates/internet-v-kvartiru/?lat=' + lat + '&lng=' + lng + '&address_text=' + address, '_blank');
-                    } catch (e) {
-                        console.log(e.name);
+                    } else {
                         button.disabled = true;
                     }
                 });
