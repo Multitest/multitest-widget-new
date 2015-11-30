@@ -21,6 +21,12 @@ function loadAutocomplete() {
             callback: function() {
                 WIDGET.Dialog.result();
             }
+        }, {
+            id: 'geoLoc',
+            text: 'Найти меня',
+            callback: function() {
+                WIDGET.GeoLoc.getGeoLoc();
+            }
         }],
     });
 }
@@ -47,6 +53,44 @@ WIDGET.Lang = typeof WIDGET.Lang != 'undefined' && WIDGET.Lang ? WIDGET.Lang : {
     isString: function(o) {
         return typeof o === 'string';
     }
+};
+
+WIDGET.GeoLoc = typeof WIDGET.GeoLoc != 'undefined' && WIDGET.GeoLoc ? WIDGET.GeoLoc : {
+    getGeoLoc: function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                WIDGET.GeoLoc.getGoogleAddress(pos.coords.latitude, pos.coords.longitude);              
+            }, function() {
+              alert("geolocation access denied");
+      //hide geoloc button
+  });
+        } else {
+            alert("geolocation is not supported");
+    //hide geoloc button
+}
+}, getGoogleAddress: function(lat, lng) {
+    var apiUrl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                if (success)
+                    WIDGET.GeoLoc.googleCallback(JSON.parse(xhr.responseText));  
+            } else {
+                if (error)
+                    error(xhr);
+            }
+        }
+    };
+    xhr.open("GET", apiUrl + lat + "," + lng, true);
+    xhr.send();
+
+}, googleCallback: function(json) {
+    if(json && json.result && json.results[0]) {
+        var addr = json.results[0].formatted_address;
+    //push full addr to input field
+}
+}, 
 };
 
 WIDGET.DOM = typeof WIDGET.DOM != 'undefined' && WIDGET.DOM ? WIDGET.DOM : {
@@ -158,7 +202,7 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                 activateListeners(o.buttons);
             },
             function(xhr) {}
-        );
+            );
 
     };
 
