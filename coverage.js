@@ -1,12 +1,15 @@
 var lat, lng;
 var country = 'ua';
 var options = {};
+var urlGooglePlaces = 'https://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeAutocomplete&libraries=places';
+var resultMultitest = 'http://www.multitest.ua/coordinates/internet-v-kvartiru/';
+var ipApi = 'http://ip-api.com/json';
 
 function loadAutocomplete() {
     function runWidget() {
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = 'https://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeAutocomplete&libraries=places';
+        script.src = urlGooglePlaces;
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
     }
     setTimeout(runWidget, 1000);
@@ -126,6 +129,15 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
     dialog.style.display = 'none';
     document.body.appendChild(dialog);
 
+    String.prototype.format = function() {
+        var formatted = this;
+        for (var i = 0; i < arguments.length; i++) {
+            var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+            formatted = formatted.replace(regexp, arguments[i]);
+        }
+        return formatted;
+    };
+
     var loadJSON = function(path, success, error) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
@@ -142,20 +154,6 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         xhr.open("GET", path, true);
         xhr.send();
         return true;
-    }
-
-    var formatAddress = function(place) {
-        var address = '';
-        if (place.terms.length) {
-            for (var i = place.terms.length - 2; i >= 0; i--) {
-                var current = place.terms[i].value;
-                var prev = i > 0 ? place.terms[i - 1].value : '#';
-                if (current.indexOf(prev) == -1) {
-                    address += place.terms[i].value + (i != 0 ? ', ' : '');
-                }
-            }
-        }
-        return address;
     }
 
     var isHouse = function(results) {
@@ -182,14 +180,17 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         var html = '';
         var city = '';
 
-        loadJSON('http://ip-api.com/json',
+        loadJSON(ipApi,
             function(data) {
                 lat = data.lat;
                 lng = data.lon;
+                if (data.countryCode) {
+                    country = data.countryCode
+                }
                 options = {
                     types: ['address'],
                     componentRestrictions: {
-                        country: data.countryCode
+                        country: country
                     },
                 };
 
@@ -245,7 +246,7 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                         button.disabled = false;
                         lat = results[0].geometry.location.lat();
                         lng = results[0].geometry.location.lng();
-                        window.open('http://www.multitest.ua/coordinates/internet-v-kvartiru/?lat=' + lat + '&lng=' + lng + '&address_text=' + address, '_blank');
+                        window.open(resultMultitest + '?lat={0}&lng={1}&address_text={2}'.format(lat, lng, address), '_blank');
                     } else {
                         button.disabled = true;
                     }
