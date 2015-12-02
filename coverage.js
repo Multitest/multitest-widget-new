@@ -7,7 +7,7 @@ var ipApi = 'http://ip-api.com/json';
 var style = 'banner470'
 var multitestLink = 'http://www.multitest.ua/';
 
-var helpText = 'Введи полный адрес, например "Киев, Николая Бажана просп. 32"';
+var helpText = 'Введи полный адрес, например: Киев, Николая Бажана просп. 32';
 
 String.prototype.format = function() {
     var formatted = this;
