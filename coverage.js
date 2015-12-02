@@ -47,7 +47,7 @@ function loadAutocomplete() {
         }],
         buttons: [{
             id: 'result',
-            text: 'Сравни тарифы',
+            text: 'Тарифы',
             callback: function() {
                 WIDGET.Dialog.resultMultitest('address', 'result');
             }
