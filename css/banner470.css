@@ -1,0 +1,77 @@
+		#banner470 {
+			margin: auto;
+			padding: 4px 11px 6px;
+		    width: 446px;
+			height: 50px;
+			font: 14px/16px "ubuntu", sans-serif;
+			background: #fbe7c7 url(http://www.multitest.ua/widget/images/bg-banner.gif);
+			color: #fff;
+		}
+		#banner470 a {
+			color: #1b61a7;
+			text-decoration: underline;
+		}
+		#banner470 a:hover {text-decoration: none;}
+		#banner470 .header {
+			overflow: hidden;
+			margin: 0 0 3px;
+			font-weight: 700;
+			color: #1b61a7;
+		}
+		#banner470 .header .heading {
+			float: left;
+			margin: 0 5px 0 0;
+			font-size: 14px;
+			line-height: 16px;
+		}
+		#banner470 .header .logo {
+			float: right;
+			margin: 0px;
+			width: 98px;
+			height: 13px;
+			font: 0px/0px a;
+			background: url(http://www.multitest.ua/widget/images/logo.png) 0 0 no-repeat;
+		}
+		#banner470 .header .logo a {
+			display: block;
+			height: 100%;
+		}
+		#banner470 input[type="text"] {
+			float: left;
+			margin: 0;
+			padding: 3px 7px;
+			width: 350px;
+			height: 23px;
+			padding-right: 10px;
+			border: 1px solid #a2a3a3;
+			border-radius: 3px;
+			color: #6c6c6c;
+			font: 80% arial, helvetica, sans-serif;
+			vertical-align: middle;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		#banner470 input[type="text"]:focus {border-color: #83abf5;}
+		#banner470 button {
+			float: left;
+			margin-left: 10px;
+			padding: 0 0 2px;
+			width: 77px;
+			height: 23px;
+			border: 0;
+			border-radius: 3px;
+			font: 700 10px/12px 'ubuntu', sans-serif;
+			text-shadow: 1px 1px 1px #b45210;
+			background: #f4cca3;
+			background: -moz-linear-gradient(top, #f4cca3 0%, #fa9530 4%, #ff8916 7%, #f88014 33%, #db560b 93%, #c84306 96%, #a65634 100%);
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4cca3), color-stop(4%,#fa9530), color-stop(7%,#ff8916), color-stop(33%,#f88014), color-stop(93%,#db560b), color-stop(96%,#c84306), color-stop(100%,#a65634));
+			background: -webkit-linear-gradient(top, #f4cca3 0%,#fa9530 4%,#ff8916 7%,#f88014 33%,#db560b 93%,#c84306 96%,#a65634 100%);
+			background: -o-linear-gradient(top, #f4cca3 0%,#fa9530 4%,#ff8916 7%,#f88014 33%,#db560b 93%,#c84306 96%,#a65634 100%);
+			background: -ms-linear-gradient(top, #f4cca3 0%,#fa9530 4%,#ff8916 7%,#f88014 33%,#db560b 93%,#c84306 96%,#a65634 100%);
+			background: linear-gradient(to bottom, #f4cca3 0%,#fa9530 4%,#ff8916 7%,#f88014 33%,#db560b 93%,#c84306 96%,#a65634 100%);
+			color: #fff;
+			cursor: pointer;
+			-webkit-box-shadow: inset 0 -1px 1px #a65634;
+			box-shadow: inset 0 -1px 1px #a65634;
+		}
+		#banner470 button {filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff8916', endColorstr='#db560b',GradientType=0);}

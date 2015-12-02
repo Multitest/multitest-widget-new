@@ -4,6 +4,19 @@ var options = {};
 var urlGooglePlaces = 'https://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeAutocomplete&libraries=places';
 var resultMultitest = 'http://www.multitest.ua/coordinates/internet-v-kvartiru/';
 var ipApi = 'http://ip-api.com/json';
+var style = 'banner470'
+var multitestLink = 'http://www.multitest.ua/';
+
+var errorText = 'Введите полный адрес, например Киев, Николая Бажана просп. 32';
+
+String.prototype.format = function() {
+    var formatted = this;
+    for (var i = 0; i < arguments.length; i++) {
+        var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+        formatted = formatted.replace(regexp, arguments[i]);
+    }
+    return formatted;
+};
 
 function loadAutocomplete() {
     function runWidget() {
@@ -11,6 +24,13 @@ function loadAutocomplete() {
         script.type = 'text/javascript';
         script.src = urlGooglePlaces;
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.media = 'all';
+        link.href = 'css/{0}.css'.format(style);
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(link);
     }
     setTimeout(runWidget, 1000);
 
@@ -27,7 +47,7 @@ function loadAutocomplete() {
         }],
         buttons: [{
             id: 'result',
-            text: 'Сравнить тарифы',
+            text: 'Найти',
             callback: function() {
                 WIDGET.Dialog.resultMultitest('address', 'result');
             }
@@ -125,18 +145,9 @@ if (typeof WIDGET == "undefined" || !WIDGET) {
 WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Dialog : function() {
 
     var dialog = document.getElementById('widget-multitest-inner');
-    dialog.className = 'dialog';
+    dialog.id = 'banner470';
     dialog.style.display = 'none';
     document.body.appendChild(dialog);
-
-    String.prototype.format = function() {
-        var formatted = this;
-        for (var i = 0; i < arguments.length; i++) {
-            var regexp = new RegExp('\\{' + i + '\\}', 'gi');
-            formatted = formatted.replace(regexp, arguments[i]);
-        }
-        return formatted;
-    };
 
     var loadJSON = function(path, success, error) {
         var xhr = new XMLHttpRequest();
@@ -188,13 +199,32 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                     country = data.countryCode
                 }
                 options = {
-                    types: ['address'],
+                    types: ['geocode'],
                     componentRestrictions: {
                         country: country
                     },
                 };
 
-                WIDGET.DOM.addText(dialog, 'p', o.body);
+                var header = document.createElement('header');
+                header.className = 'header';
+                dialog.appendChild(header);
+
+                strongHeading = document.createElement('strong');
+                strongHeading.className = 'heading';
+                strongHeading.innerHTML = o.body;
+
+                strongLogo = document.createElement('strong');
+                strongLogo.className = 'logo';
+                logoLink = document.createElement('a');
+                logoLink.href = multitestLink;
+                logoLink.target = '_blank';
+                logoLink.title = 'Multitest';
+                logoLink.innerHTML = 'Мультитест';
+                strongLogo.appendChild(logoLink);
+
+                header.appendChild(strongHeading);
+                header.appendChild(strongLogo);                
+
                 for (i = 0; i < o.inputs.length; i++) {
                     WIDGET.DOM.addInput(dialog, o.inputs[i], data.city);
                 }
@@ -235,9 +265,7 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         resultMultitest: function(address, result) {
             address = document.getElementById(address).value;
             button = document.getElementById(result);
-            button.disabled = false;
-
-            if (address && !button.disabled) {
+            if (address) {
                 var geocoder = new google.maps.Geocoder();
                 geocoder.geocode({
                     address: address
@@ -248,6 +276,7 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                         lng = results[0].geometry.location.lng();
                         window.open(resultMultitest + '?lat={0}&lng={1}&address_text={2}'.format(lat, lng, address), '_blank');
                     } else {
+                        alert(errorText);
                         button.disabled = true;
                     }
                 });
