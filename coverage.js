@@ -7,7 +7,7 @@ var ipApi = 'http://ip-api.com/json';
 var style = 'banner470'
 var multitestLink = 'http://www.multitest.ua/';
 
-var errorText = 'Введите полный адрес, например Киев, Николая Бажана просп. 32';
+var helpText = 'Введите свой адрес, например Киев, Николая Бажана просп. 32';
 
 String.prototype.format = function() {
     var formatted = this;
@@ -40,7 +40,7 @@ function loadAutocomplete() {
             id: 'address',
             name: 'address',
             autocomplete: true,
-            placeholder: 'Введите улицу и номер дома',
+            placeholder: helpText,
             callback: function() {
                 WIDGET.Dialog.changeAddress('address', 'result');
             }
@@ -226,7 +226,7 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                 header.appendChild(strongLogo);                
 
                 for (i = 0; i < o.inputs.length; i++) {
-                    WIDGET.DOM.addInput(dialog, o.inputs[i], data.city);
+                    WIDGET.DOM.addInput(dialog, o.inputs[i], '');
                 }
                 activateListeners(o.inputs, 'change');
 
@@ -276,7 +276,7 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                         lng = results[0].geometry.location.lng();
                         window.open(resultMultitest + '?lat={0}&lng={1}&address_text={2}'.format(lat, lng, address), '_blank');
                     } else {
-                        alert(errorText);
+                        alert(helpText);
                         button.disabled = true;
                     }
                 });
