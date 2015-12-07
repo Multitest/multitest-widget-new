@@ -4,8 +4,9 @@ var options = {};
 var urlGooglePlaces = 'https://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeAutocomplete&libraries=places';
 var resultMultitest = 'http://www.multitest.ua/coordinates/internet-v-kvartiru/';
 var ipApi = 'http://ip-api.com/json';
-var style = 'banner470'
+var style = '';
 var multitestLink = 'http://www.multitest.ua/';
+var code, design;
 
 var helpText = 'Введите свой адрес, например Киев, Николая Бажана просп. 32';
 
@@ -20,6 +21,13 @@ String.prototype.format = function() {
 
 function loadAutocomplete() {
     function runWidget() {
+        block = document.getElementById("widget-multitest");
+        design = block.dataset.design;
+        if (design == 1) {
+            style = 'banner470';
+        } else {
+            style = 'banner7281';
+        }
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = urlGooglePlaces;
@@ -143,9 +151,17 @@ if (typeof WIDGET == "undefined" || !WIDGET) {
 }
 
 WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Dialog : function() {
+    block = document.getElementById("widget-multitest");
+    design = block.dataset.design;
+    code = block.dataset.code;
+    if (design == 1) {
+        style = 'banner470';
+    } else {
+        style = 'banner7281';
+    }
 
     var dialog = document.getElementById('widget-multitest-inner');
-    dialog.id = 'banner470';
+    dialog.id = style;
     dialog.style.display = 'none';
     document.body.appendChild(dialog);
 
@@ -201,7 +217,7 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                 options = {
                     types: ['geocode'],
                     componentRestrictions: {
-                        country: country
+                        //country: country
                     },
                 };
 
@@ -223,7 +239,7 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                 strongLogo.appendChild(logoLink);
 
                 header.appendChild(strongHeading);
-                header.appendChild(strongLogo);                
+                header.appendChild(strongLogo);
 
                 for (i = 0; i < o.inputs.length; i++) {
                     WIDGET.DOM.addInput(dialog, o.inputs[i], '');
@@ -274,12 +290,14 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                         button.disabled = false;
                         lat = results[0].geometry.location.lat();
                         lng = results[0].geometry.location.lng();
-                        window.open(resultMultitest + '?lat={0}&lng={1}&address_text={2}'.format(lat, lng, address), '_blank');
+                        window.open(resultMultitest + '?lat={0}&lng={1}&address_text={2}&code={3}'.format(lat, lng, address, code), '_blank');
                     } else {
                         alert(helpText);
                         button.disabled = true;
                     }
                 });
+            } else {
+                alert(helpText);
             }
         },
         changeAddress: function(address, result) {

@@ -1,0 +1,82 @@
+		#banner7281 button {filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff8916', endColorstr='#db560b',GradientType=0);}
+		#banner7281 {
+			margin: auto;
+			padding: 2px 14px 0;
+		    width: 700px;
+			height: 88px;
+			font: 14px/16px "ubuntu", sans-serif;
+			background: #fbe7c7 url(http://www.multitest.ua/widget/images/bg-banner.gif);
+			color: #fff;
+		}
+		#banner7281 a {
+			color: #1b61a7;
+			text-decoration: underline;
+		}
+		#banner7281 a:hover {text-decoration: none;}
+		#banner7281 .header {
+			overflow: hidden;
+			margin: 0 12px 7px 0;
+			font-weight: 700;
+			color: #1b61a7;
+		}
+		#banner7281 .header .heading {
+			float: left;
+			margin: 0 5px 0 0;
+			font-size: 21px;
+			line-height: 24px;
+		}
+		#banner7281 .header .logo {
+			float: right;
+			margin: 9px 0 0;
+			width: 102px;
+			height: 15px;
+			font: 0px/0px a;
+			background: url(http://www.multitest.ua/widget/images/logo.png) 0 0 no-repeat;
+		}
+		#banner7281 .header .logo a {
+			display: block;
+			height: 100%;
+		}
+		#banner7281 {
+			overflow: hidden;
+			margin: 0 -1px;
+			font: 14px/16px arial, helvetica, sans-serif;
+			color: #2f2f2f;
+		}
+		#banner7281 input[type="text"] {
+			float: left;
+			margin: 0;
+			padding: 5px 14px 6px;
+			width: 585px;
+			height: 29px;
+			border: 1px solid #a2a3a3;
+			border-radius: 3px;
+			color: #6c6c6c;
+			font: 100% arial, helvetica, sans-serif;
+			vertical-align: middle;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		#banner7281 input[type="text"]:focus {border-color: #83abf5;}
+		#banner7281 button {
+			float: left;
+			margin-left: 10px;
+			padding: 0 0 4px;
+			width: 100px;
+			height: 29px;
+			border: 0;
+			border-radius: 3px;
+			font: 700 15px/17px 'ubuntu', sans-serif;
+			text-shadow: 1px 1px 1px #b45210;
+			background: #f4cca3;
+			background: -moz-linear-gradient(top, #f4cca3 0%, #fa9530 4%, #ff8916 7%, #f88014 33%, #db560b 93%, #c84306 96%, #a65634 100%);
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4cca3), color-stop(4%,#fa9530), color-stop(7%,#ff8916), color-stop(33%,#f88014), color-stop(93%,#db560b), color-stop(96%,#c84306), color-stop(100%,#a65634));
+			background: -webkit-linear-gradient(top, #f4cca3 0%,#fa9530 4%,#ff8916 7%,#f88014 33%,#db560b 93%,#c84306 96%,#a65634 100%);
+			background: -o-linear-gradient(top, #f4cca3 0%,#fa9530 4%,#ff8916 7%,#f88014 33%,#db560b 93%,#c84306 96%,#a65634 100%);
+			background: -ms-linear-gradient(top, #f4cca3 0%,#fa9530 4%,#ff8916 7%,#f88014 33%,#db560b 93%,#c84306 96%,#a65634 100%);
+			background: linear-gradient(to bottom, #f4cca3 0%,#fa9530 4%,#ff8916 7%,#f88014 33%,#db560b 93%,#c84306 96%,#a65634 100%);
+			color: #fff;
+			cursor: pointer;
+			-webkit-box-shadow: inset 0 -1px 1px #a65634;
+			box-shadow: inset 0 -1px 1px #a65634;
+		}
