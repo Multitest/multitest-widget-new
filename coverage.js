@@ -8,7 +8,7 @@ var style = '';
 var multitestLink = 'http://www.multitest.ua/';
 var code, design;
 
-var helpText = 'Введите свой адрес, например Киев, Николая Бажана просп. 32';
+var helpText = 'Введи полный адрес, например: Киев, Николая Бажана просп. 32';
 
 String.prototype.format = function() {
     var formatted = this;
@@ -43,7 +43,7 @@ function loadAutocomplete() {
     setTimeout(runWidget, 1000);
 
     WIDGET.Dialog.show({
-        body: 'Подбери лучший интернет бесплатно',
+        body: 'Найди интернет провайдера по адресу',
         inputs: [{
             id: 'address',
             name: 'address',
@@ -55,7 +55,7 @@ function loadAutocomplete() {
         }],
         buttons: [{
             id: 'result',
-            text: 'Найти',
+            text: 'Тарифы',
             callback: function() {
                 WIDGET.Dialog.resultMultitest('address', 'result');
             }
