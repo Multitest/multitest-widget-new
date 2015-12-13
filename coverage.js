@@ -21,13 +21,7 @@ String.prototype.format = function() {
 
 function loadAutocomplete() {
     function runWidget() {
-        block = document.getElementById("widget-multitest");
-        design = block.dataset.design;
-        if (design == 1) {
-            style = 'banner470';
-        } else {
-            style = 'banner7281';
-        }
+        WIDGET.DOM.getDesign();
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = urlGooglePlaces;
@@ -92,6 +86,28 @@ WIDGET.DOM = typeof WIDGET.DOM != 'undefined' && WIDGET.DOM ? WIDGET.DOM : {
         return (el && el.nodeType) ? el : document.getElementById(el);
     },
 
+    getDesign: function() {
+        block = document.getElementById("widget-multitest");
+        link = block.src;
+        try {
+            design = unescape(link).split("design=")[1].split("&")[0]
+        } catch (s) {
+            design = 1;
+            console.log(e.name)
+        }
+        try {
+            code = unescape(link).split("code=")[1].split("&")[0]
+        } catch (e) {
+            code = "";
+            console.log(e.name)
+        }
+        if (design == 1) {
+            style = 'banner470';
+        } else {
+            style = 'banner7281';
+        }
+    },
+
     addInput: function(dialog, inputData, text) {
         var input = document.createElement("input");
         input.type = "text";
@@ -151,15 +167,7 @@ if (typeof WIDGET == "undefined" || !WIDGET) {
 }
 
 WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Dialog : function() {
-    block = document.getElementById("widget-multitest");
-    design = block.dataset.design;
-    code = block.dataset.code;
-    if (design == 1) {
-        style = 'banner470';
-    } else {
-        style = 'banner7281';
-    }
-
+    WIDGET.DOM.getDesign();
     var dialog = document.getElementById('widget-multitest-inner');
     dialog.id = style;
     dialog.style.display = 'none';
