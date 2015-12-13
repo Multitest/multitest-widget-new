@@ -79,3 +79,27 @@
 			-webkit-box-shadow: inset 0 -1px 1px #a65634;
 			box-shadow: inset 0 -1px 1px #a65634;
 		}
+		#banner7281 .btn {
+			display: inline-block;
+			margin: 3px 5px 0 290px;
+			padding: 1px 0 0 23px;
+			min-height: 19px;
+			background: url(http://www.multitest.ua/widget/images/ico-loc.png) 0 50% no-repeat;
+			font-size: 12px;
+			line-height: 15px;
+			text-decoration: none;
+			vertical-align: top;
+		}
+		#banner7281 .btn span {
+			display: block;
+			border-bottom: 1px dashed #1770c9;
+		}
+		#banner7281 .btn:hover span {border-color: transparent;}
+		#banner7281 .btn-holder {
+			float: left;
+			padding: 3px;
+			width: 104px;
+			border-radius: 5px;
+			background: #d0deed;
+			background: rgba(68, 125, 182, 0.25);
+		}

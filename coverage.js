@@ -134,6 +134,18 @@ WIDGET.DOM = typeof WIDGET.DOM != 'undefined' && WIDGET.DOM ? WIDGET.DOM : {
         dialog.appendChild(p);
     },
 
+    addMap: function(dialog, tag, text, className) {
+        var a = document.createElement('a');
+        a.className = className;
+        a.target = '_blank';
+        a.href = multitestLink;
+        var tag = document.createElement(tag);
+        text = document.createTextNode(text);
+        tag.appendChild(text);
+        a.appendChild(tag);
+        dialog.appendChild(a);
+    },
+
     addListener: function(el, type, fn) {
         if (WIDGET.Lang.isString(el)) {
             el = this.get(el);
@@ -211,6 +223,33 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
         return false;
     };
 
+    var redirectResult = function(address, result, error) {
+        address = document.getElementById(address).value
+        if (address) {
+            document.getElementById(result).disabled = false;
+        } else {
+            document.getElementById(result).disabled = true;
+        }
+        if (address) {
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                address: address
+            }, function(results) {
+                if (isHouse(results)) {
+                    lat = results[0].geometry.location.lat();
+                    lng = results[0].geometry.location.lng();
+                    window.open(resultMultitest + '?lat={0}&lng={1}&address_text={2}&code={3}'.format(lat, lng, address, code), '_blank');
+                } else {
+                    if (error) {
+                        alert(helpText);
+                    }
+                }
+            });
+        } else {
+            alert(helpText);
+        }
+    }
+
     var render = function(o) {
         var html = '';
         var city = '';
@@ -225,7 +264,7 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                 options = {
                     types: ['geocode'],
                     componentRestrictions: {
-                        //country: country
+                        country: country
                     },
                 };
 
@@ -259,6 +298,9 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
                 }
                 dialog.style.display = 'block';
                 activateListeners(o.buttons, 'click');
+                if (design == 2) {
+                    WIDGET.DOM.addMap(dialog, 'span', 'Указать на карте', 'btn');
+                }
             },
             function(xhr) {}
         );
@@ -287,33 +329,10 @@ WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Di
             dialog.style.display = 'none';
         },
         resultMultitest: function(address, result) {
-            address = document.getElementById(address).value;
-            button = document.getElementById(result);
-            if (address) {
-                var geocoder = new google.maps.Geocoder();
-                geocoder.geocode({
-                    address: address
-                }, function(results) {
-                    if (isHouse(results)) {
-                        button.disabled = false;
-                        lat = results[0].geometry.location.lat();
-                        lng = results[0].geometry.location.lng();
-                        window.open(resultMultitest + '?lat={0}&lng={1}&address_text={2}&code={3}'.format(lat, lng, address, code), '_blank');
-                    } else {
-                        alert(helpText);
-                        button.disabled = true;
-                    }
-                });
-            } else {
-                alert(helpText);
-            }
+            redirectResult(address, result, true);
         },
         changeAddress: function(address, result) {
-            if (document.getElementById(address).value) {
-                document.getElementById(result).disabled = false;
-            } else {
-                document.getElementById(result).disabled = true;
-            }
+            redirectResult(address, result, false);
         }
     };
 }();
