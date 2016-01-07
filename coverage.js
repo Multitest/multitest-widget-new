@@ -6,6 +6,7 @@ var resultMultitest = 'http://www.multitest.ua/coordinates/internet-v-kvartiru/'
 var ipApi = 'http://ip-api.com/json';
 var style = '';
 var multitestLink = 'http://www.multitest.ua/';
+var multitestStatic = 'http://www.multitest.ua/static/widget/';
 var code, design;
 
 var helpText = 'Введи полный адрес, например: Киев, Николая Бажана просп. 32';
@@ -31,7 +32,7 @@ function loadAutocomplete() {
         link.rel = 'stylesheet';
         link.type = 'text/css';
         link.media = 'all';
-        link.href = 'css/{0}.css'.format(style);
+        link.href = '{0}css/{1}.css'.format(multitestStatic, style);
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(link);
     }
     setTimeout(runWidget, 1000);
@@ -180,10 +181,10 @@ if (typeof WIDGET == "undefined" || !WIDGET) {
 
 WIDGET.Dialog = typeof WIDGET.Dialog != 'undefined' && WIDGET.Dialog ? WIDGET.Dialog : function() {
     WIDGET.DOM.getDesign();
-    var dialog = document.getElementById('widget-multitest-inner');
+    var dialog = document.createElement('div');
     dialog.id = style;
     dialog.style.display = 'none';
-    document.body.appendChild(dialog);
+    document.getElementById('widget-multitest-inner').appendChild(dialog);
 
     var loadJSON = function(path, success, error) {
         var xhr = new XMLHttpRequest();
